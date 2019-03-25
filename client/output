@@ -1,0 +1,9 @@
+DepartmentID |name|school | website 
+ 1 | Computer Science | Henry Samueli School of Engineering and Applied Science | https://www.cs.ucla.edu/faculty/ 
+ 2 | Electrical Engineering | Henry Samueli School of Engineering and Applied Science | https://www.ee.ucla.edu/all-faculty/ 
+ 3 | Mechanical and Aerospace Engineering | Henry Samueli School of Engineering and Applied Science | https://www.mae.ucla.edu/ucla-mae-faculty/ 
+ 4 | Chemical and Biomolecular Engineering | Henry Samueli School of Engineering and Applied Science | https://www.chemeng.ucla.edu/faculty/ 
+ 5 | Civil and Environmental Engineering | Henry Samueli School of Engineering and Applied Science | https://www.cee.ucla.edu/faculty/ 
+ 6 | Materials Science and Engineering | Henry Samueli School of Engineering and Applied Science | https://www.mse.ucla.edu/faculty/ 
+ 7 | Bioengineering | Henry Samueli School of Engineering and Applied Science | https://www.bioeng.ucla.edu/adjunct_faculty/ ;;; https://www.bioeng.ucla.edu/affiliate_faculty/ ;;; https://www.bioeng.ucla.edu/joint_faculty/;;; https://www.bioeng.ucla.edu/core_faculty-2/ 
+ 8 | Statistics | Henry Samueli School of Engineering and Applied Science | http://directory.stat.ucla.edu/faculty/all-faculty

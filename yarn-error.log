@@ -1,0 +1,46 @@
+Arguments: 
+  /usr/local/Cellar/node/11.11.0/bin/node /usr/local/Cellar/yarn/1.13.0/libexec/bin/yarn.js dev
+
+PATH: 
+  /Users/udasahai/google-cloud-sdk/bin:/Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/local/bin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Applications/Wireshark.app/Contents/MacOS
+
+Yarn version: 
+  1.13.0
+
+Node version: 
+  11.11.0
+
+Platform: 
+  darwin x64
+
+Trace: 
+  SyntaxError: /Users/udasahai/Desktop/affinity/package.json: Unexpected token : in JSON at position 9
+      at JSON.parse (<anonymous>)
+      at /usr/local/Cellar/yarn/1.13.0/libexec/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/1.13.0/libexec/lib/cli.js:304:30)
+      at /usr/local/Cellar/yarn/1.13.0/libexec/lib/cli.js:315:13
+
+npm manifest: 
+  "name": "example-create-react-app-express",
+    "version": "1.0.0",
+    "scripts": {
+      "client": "cd client && yarn start",
+      "server": "nodemon ./server/server.js",
+      "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+    },
+    "dependencies": {
+      "body-parser": "^1.18.3",
+      "express": "^4.16.4",
+      "pug": "^2.0.3"
+    },
+    "devDependencies": {
+      "concurrently": "^4.0.1"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
