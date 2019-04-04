@@ -13,6 +13,8 @@ class App extends React.Component {
     this.state = {
     	value: '',
     	selections_department: 0,
+    	selections_research: "",
+    	research_interest : null, 
     	department: null, 
     	response: null,
     	isLoaded: false
@@ -21,6 +23,7 @@ class App extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.callApi = this.callApi.bind(this);
     this.department_selection = this.department_selection.bind(this);
+    this.change_research = this.change_research.bind(this)
   }
 
 
@@ -35,6 +38,13 @@ class App extends React.Component {
   	})
   }
 
+change_research(event){
+    if (event.which == 13 || event.keyCode == 13) {
+	    this.setState({
+	  		selections_research: event.target.value
+	  	})
+    }
+}
 
  componentDidMount() {
     this.callApi()
@@ -60,7 +70,14 @@ callApi(){
 	  	return response.json();
 	  })
 	  .then(function(data){
+	  	if (data.status !== 200) throw Error();
 	  	self.setState({department: data.body})
+	  	return fetch('research_interest')
+	  }).then(function(response){
+	  	return response.json()
+	  }).then(function(data){
+	  	if (data.status !== 200) throw Error();
+	  	self.setState({research_interest: data.body})
 	  	return true; 
 	  })
 
@@ -88,12 +105,19 @@ callApi(){
 
  			var value = this.state.value; 
  			var selection = this.state.selections_department;
+ 			var selections_research = this.state.selections_research;
 
  			var data = this.state.response;
 
- 			if(value.length >= 3){
+ 			if(selections_research.length > 0){
  				value = value.toLowerCase();
 	 			data = data.filter(function(tile){
+	 				return tile.researchInterests.toLowerCase().includes(selections_research.toLowerCase())
+	 			})
+ 			}
+
+ 			if(value.length >= 3){
+ 				data = data.filter(function(tile){
 	 				return (tile.firstName.toLowerCase().includes(value) || tile.lastName.toLowerCase().includes(value))
 	 			})
  			}
@@ -104,6 +128,8 @@ callApi(){
  					return tile.departmentID == selection
  				})
  			}
+
+
 
  			return data.map(tile => (
 			<Tile key={tile.userID}
@@ -130,12 +156,19 @@ callApi(){
 			  this.state.department.map(dep => <option key={dep.name} value={dep.DepartmentID}>{dep.name}</option>)
 			  }
 			</select> 
-			<select> 
-			  <option value="volvo">Volvo</option>
-			  <option value="saab">Saab</option>
-			  <option value="mercedes">Mercedes</option>
-			  <option value="audi">Audi</option>
-			</select> 
+
+			<input list="interests" onKeyPress={this.change_research}/>
+			<datalist id="interests"> 
+
+			    {
+			    	!this.state.isLoaded ? <option value={0}/> :
+			    	this.state.research_interest.map((item) =>
+			      <option key={item.research_interestID} value={item.keyword} />
+			    )
+
+			    }
+			</datalist>
+
 		</div> 
 		</div> 
 		<div id="deck">
