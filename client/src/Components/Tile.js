@@ -37,12 +37,13 @@ class Tile extends React.Component{
 
 else 
 	return(
-
-	<div className="card"> 
+ 
 	<Card onClick={()=> this.setState({ clicked: true })}>
-	  <div className="ppic"> 
+	 {/*
+	 <div className="ppic"> 
 	  <Card.Img variant="top" src={this.props.contact.imgUrl}/>
 	  </div> 
+	  */}
 	  <Card.Body>
 	    <Card.Title>{this.props.contact.name}</Card.Title>
 	    <Card.Text>
@@ -50,7 +51,6 @@ else
 	    </Card.Text>
 	  </Card.Body>
 	</Card>
-	</div>
 		)
 	}
 }
