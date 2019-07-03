@@ -1,5 +1,6 @@
 {
   "name": "affinity",
+  "homepage": "http://https://ushare.idre.ucla.edu/ushare/app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -25,6 +26,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "proxy": "http://localhost:5000/"
+  ]
 }

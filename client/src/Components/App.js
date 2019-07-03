@@ -57,14 +57,14 @@ callApi(){
 
 	var self = this; 
 
-	return fetch('/users')
+	return fetch('https://ushare.idre.ucla.edu/ushare/api' + '/users')
 	  .then(function(response) {
 	    return response.json();
 	  })
 	  .then(function(data) {
 	  	if (data.status !== 200) throw Error();
 		self.setState({response: (data.body) })
-		return fetch('/department')
+		return fetch('https://ushare.idre.ucla.edu/ushare/api' +'/department')
 	  })
 	  .then(function(response){
 	  	return response.json();
@@ -72,7 +72,7 @@ callApi(){
 	  .then(function(data){
 	  	if (data.status !== 200) throw Error();
 	  	self.setState({department: data.body})
-	  	return fetch('research_interest')
+	  	return fetch('https://ushare.idre.ucla.edu/ushare/api' +'research_interest')
 	  }).then(function(response){
 	  	return response.json()
 	  }).then(function(data){
