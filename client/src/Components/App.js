@@ -72,7 +72,7 @@ callApi(){
 	  .then(function(data){
 	  	if (data.status !== 200) throw Error();
 	  	self.setState({department: data.body})
-	  	return fetch('https://ushare.idre.ucla.edu/ushare/api' +'research_interest')
+	  	return fetch('https://ushare.idre.ucla.edu/ushare/api' +'/research_interest')
 	  }).then(function(response){
 	  	return response.json()
 	  }).then(function(data){
