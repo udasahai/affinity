@@ -1,6 +1,6 @@
 
 import React from "react"
-import {CardColumns,Form, Dropdown} from 'react-bootstrap'
+import {CardColumns,Form, Dropdown, ModalTitle} from 'react-bootstrap'
 import Tile from "./Tile"
 import {tileData} from "../data"
 import "./App.css"
@@ -46,7 +46,31 @@ change_research(event){
     }
 }
 
+getInfo(){
+	var str = "/login"
+
+	var ret 
+	
+	return fetch(str).then(
+		function(data){
+			return data.json()
+		}
+	)
+}
+
+
  componentDidMount() {
+
+		// console.log(this.getInfo())
+		this.getInfo().then(function (data) {
+			localStorage.setItem("SHIBEDUPERSONAFFILIATION", data["SHIBEDUPERSONAFFILIATION"])
+			localStorage.setItem("SHIBEDUPERSONPRINCIPALNAME", data["SHIBEDUPERSONPRINCIPALNAME"])
+			localStorage.setItem("SHIBEDUPERSONTARGETEDID", data["SHIBEDUPERSONTARGETEDID"])
+			localStorage.setItem("SHIBMAIL", data["SHIBMAIL"])
+			localStorage.setItem("SHIBGIVENNAME", data["SHIBGIVENNAME"])
+		})
+
+
     this.callApi()
       .then(res => this.setState({isLoaded: true}))
       .catch(err => console.log(err));
@@ -56,15 +80,18 @@ change_research(event){
 callApi(){
 
 	var self = this; 
+	var str = "" ;
+	// var str = 'https://ushare.idre.ucla.edu/ushare/api'; 
 
-	return fetch('https://ushare.idre.ucla.edu/ushare/api' + '/users')
+
+	return fetch(str + '/users')
 	  .then(function(response) {
 	    return response.json();
 	  })
 	  .then(function(data) {
 	  	if (data.status !== 200) throw Error();
 		self.setState({response: (data.body) })
-		return fetch('https://ushare.idre.ucla.edu/ushare/api' +'/department')
+		return fetch(str +'/department')
 	  })
 	  .then(function(response){
 	  	return response.json();
@@ -72,7 +99,7 @@ callApi(){
 	  .then(function(data){
 	  	if (data.status !== 200) throw Error();
 	  	self.setState({department: data.body})
-	  	return fetch('https://ushare.idre.ucla.edu/ushare/api' +'/research_interest')
+	  	return fetch(str +'/research_interest')
 	  }).then(function(response){
 	  	return response.json()
 	  }).then(function(data){
@@ -134,7 +161,7 @@ callApi(){
  			return data.map(tile => (
 			<Tile key={tile.userID}
 			contact={{name: tile.firstName + " " + tile.lastName , imgUrl: tile.profilePicture, 
-			email: tile.email, interests: tile.researchInterests}}
+			email: tile.email, interests: tile.researchInterests, userID: tile.userID}}
 			/>
     ))}
 

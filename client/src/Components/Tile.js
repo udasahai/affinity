@@ -24,17 +24,19 @@ class Tile extends React.Component{
 	render(){
 
 	if(this.state.clicked) 
-	return ( 
+	{
+		return ( 
     <Redirect to={{
             pathname: '/profile',
             state: { img: this.props.contact.imgUrl,
             		 name: this.props.contact.name,
             		 interests: this.props.contact.interests.split(","),
-            		 email: this.props.contact.email
+					 email: this.props.contact.email, 
+					 userID: this.props.contact.userID
             	   }
         }}/>
   ) 
-
+}
 else 
 	return(
  

@@ -17,7 +17,7 @@ import { LinkContainer } from "react-router-bootstrap";
 		              <Nav.Link>Home</Nav.Link>
 		            </LinkContainer>
 		            <LinkContainer to="/profile">
-		              <Nav.Link>Profile</Nav.Link>
+		              <Nav.Link>My Profile</Nav.Link>
 		            </LinkContainer>
 				      <NavDropdown title="Dropdown" id="basic-nav-dropdown">
 				        <NavDropdown.Item href="/app">App</NavDropdown.Item>

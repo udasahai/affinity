@@ -1,6 +1,6 @@
 
 import React from "react"
-import {Container, Row, Col, Image, Jumbotron, ListGroup} from 'react-bootstrap'
+import {Container, Row, Col, Image, Jumbotron, ListGroup,ButtonToolbar, Button} from 'react-bootstrap'
 import "./Profile.css"
 
 
@@ -12,7 +12,43 @@ class Profile extends React.Component {
 			userInfo: {
 				interests: []
 			},
+			claimed: false
 		}
+
+		this.handleClick = this.handleClick.bind(this)
+		this.callApi = this.callApi.bind(this)
+	}
+
+	handleClick(event) { 
+
+		this.callApi()
+		this.setState({"claimed": true});
+	}
+
+	callApi(){
+
+		var self = this; 
+		var str = "" ;
+		// var str = 'https://ushare.idre.ucla.edu/ushare/api'; 
+		var opts = {
+			"userID": self.state.userInfo.userID, 
+			"claimedBy": "juna"
+		}
+	
+	
+		fetch(str + '/users' , {
+			method: 'post',
+			headers: {
+				'Content-Type': 'application/json',
+				// 'Content-Type': 'application/x-www-form-urlencoded',
+			},
+			body: JSON.stringify(opts)
+		  }).then(function(response) {
+			return response.json();
+		  }).then(function(data) {
+			alert("Succesfully Claimed")
+		  });
+	
 	}
 
 
@@ -38,6 +74,15 @@ class Profile extends React.Component {
 			</Col> 
 
 			<Col>
+				<div> 
+				<ButtonToolbar>
+					{ !this.state.claimed ? 
+						<Button variant="primary" size="lg" onClick={this.handleClick}>
+						Claim
+						</Button> : null
+					}
+				</ButtonToolbar>
+					</div>
 				<div id="jumbo" fluid="true">
 
 				
