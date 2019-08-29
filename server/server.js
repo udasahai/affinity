@@ -11,6 +11,7 @@ var department = require('./routes/department');
 var research_interest = require('./routes/research_interest');
 var login = require('./routes/login')
 
+
 var app = express();
 
 // view engine setup

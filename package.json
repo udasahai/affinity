@@ -8,7 +8,11 @@
   },
   "dependencies": {
     "body-parser": "^1.18.3",
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-images-upload": "^1.2.7",
+    "reactjs-popup": "^1.4.2"
   },
   "devDependencies": {
     "concurrently": "^4.0.1"

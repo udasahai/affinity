@@ -7,6 +7,7 @@ import App from "./Components/App"
 import Profile from "./Components/Profile"
 import Header from "./Components/Nav"
 import Footer from './Components/Footer'
+import Create from './Components/Create';
 
 
 const routing = (
@@ -19,9 +20,12 @@ const routing = (
       <Route exact path="/" component={App}/>
       <Route path="/app" component={App}/>
       <Route path="/profile" component={Profile}/>
+      <Route path="/create" component={Create}/>
+
      </div>
 
     </div>
   </Router>
 )
+
 ReactDOM.render(routing, document.getElementById('root'))

@@ -2,6 +2,7 @@ import React from "react"
 import "./Tile.css"
 import { Card } from 'react-bootstrap';
 import { Route, Redirect } from 'react-router'
+import { conditionalExpression } from "babel-types";
 
 class Tile extends React.Component{
 
@@ -21,6 +22,11 @@ class Tile extends React.Component{
 
 }
 
+componentDidMount(){
+	// console.log(this.props.contact)
+	// console.log("Hello")
+}
+
 	render(){
 
 	if(this.state.clicked) 
@@ -28,12 +34,7 @@ class Tile extends React.Component{
 		return ( 
     <Redirect to={{
             pathname: '/profile',
-            state: { img: this.props.contact.imgUrl,
-            		 name: this.props.contact.name,
-            		 interests: this.props.contact.interests.split(","),
-					 email: this.props.contact.email, 
-					 userID: this.props.contact.userID
-            	   }
+            state: this.props.contact
         }}/>
   ) 
 }
@@ -47,9 +48,9 @@ else
 	  </div> 
 	  */}
 	  <Card.Body>
-	    <Card.Title>{this.props.contact.name}</Card.Title>
+	    <Card.Title>{this.props.contact.fullname }</Card.Title>
 	    <Card.Text>
-	      {(this.makeUpperCaseAfterCommas(this.props.contact.interests))}
+	      {(this.makeUpperCaseAfterCommas(this.props.contact.researchInterests))}
 	    </Card.Text>
 	  </Card.Body>
 	</Card>

@@ -46,10 +46,18 @@ change_research(event){
     }
 }
 
+getTargetId(id){
+	var str = `/users/targetid?targetid=${id}`;
+	
+	return fetch(str).then(
+		function(data){
+			return data.json()
+		}
+	)
+}
+
 getInfo(){
 	var str = "/login"
-
-	var ret 
 	
 	return fetch(str).then(
 		function(data){
@@ -61,17 +69,24 @@ getInfo(){
 
  componentDidMount() {
 
-		// console.log(this.getInfo())
+
+		var that = this; 
+
 		this.getInfo().then(function (data) {
+			// data["SHIBEDUPERSONTARGETEDID"] = "wilcox"
 			localStorage.setItem("SHIBEDUPERSONAFFILIATION", data["SHIBEDUPERSONAFFILIATION"])
 			localStorage.setItem("SHIBEDUPERSONPRINCIPALNAME", data["SHIBEDUPERSONPRINCIPALNAME"])
 			localStorage.setItem("SHIBEDUPERSONTARGETEDID", data["SHIBEDUPERSONTARGETEDID"])
 			localStorage.setItem("SHIBMAIL", data["SHIBMAIL"])
 			localStorage.setItem("SHIBGIVENNAME", data["SHIBGIVENNAME"])
+			return that.getTargetId(data["SHIBEDUPERSONTARGETEDID"])
+		}).then(function (data){
+			// localStorage.setItem
+			data.body.length > 0 ? localStorage.setItem("ISCLAIMED", "true") : localStorage.setItem("ISCLAIMED", "false")
+			// return that.callApi()
+			// localStorage.setItem("ISCLAIMED", "false")
+			return that.callApi()
 		})
-
-
-    this.callApi()
       .then(res => this.setState({isLoaded: true}))
       .catch(err => console.log(err));
   }
@@ -156,12 +171,27 @@ callApi(){
  				})
  			}
 
+			//  console.log(data[0])
 
+			// data = data.map(tile => {
+				
+			// 	tile["fullname"] = tile.firstName + " " + tile.lastName
+			// 	// tilel[""]
+			// 	tile["interests"] = tile.researchInterests.split(",")
+			// })
+
+			for (var i=0; i<data.length; i++){
+				data[i]["fullname"] = data[i].firstName + " " + data[i].lastName
+				data[i]["interests"] = data[i].researchInterests.split(",")
+			}
+
+			// console.log(data)
 
  			return data.map(tile => (
 			<Tile key={tile.userID}
-			contact={{name: tile.firstName + " " + tile.lastName , imgUrl: tile.profilePicture, 
-			email: tile.email, interests: tile.researchInterests, userID: tile.userID}}
+			// contact={{name: tile.firstName + " " + tile.lastName , imgUrl: tile.profilePicture, 
+			// email: tile.email, interests: tile.researchInterests, userID: tile.userID, claimed: tile.claimed, data: tile}}
+			contact={tile}
 			/>
     ))}
 
@@ -206,33 +236,6 @@ callApi(){
 		</div>
 			)
 
-
-		// return(
-		// 	<div>
-		// 	<CardColumns>
-		// 	<Tile
-		// 	contact={{name: "Udayan Sahai", imgUrl: "http://placekitten.com/300/200", 
-		// 	email: "udasahai@gmail.com", interests: "Algs, Networks"}}
-		// 	/>
-		// 	<Tile
-		// 	contact={{name: "Udayan Sahai", imgUrl: "http://placekitten.com/300/200", 
-		// 	email: "udasahai@gmail.com", interests: "Algs, Networks"}}
-		// 	/>
-		// 	<Tile 
-		// 	contact={{name: "Udayan Sahai", imgUrl: "../../pic.png", 
-		// 	email: "udasahai@gmail.com", interests: "Algs, Networks"}}
-		// 	/>
-		// 	<Tile 
-		// 	contact={{name: "Udayan Sahai", imgUrl: "../../shot.png", 
-		// 	email: "udasahai@gmail.com", interests: "Algs, Networks"}}
-		// 	/>
-		// 	<Tile 
-		// 	contact={{name: "Udayan Sahai", imgUrl: "http://placekitten.com/300/200", 
-		// 	email: "udasahai@gmail.com", interests: "Algs, Networks"}}
-		// 	/>
-		// 	</CardColumns>
-		// 	</div>
-		// 	)
 	}
 }
 

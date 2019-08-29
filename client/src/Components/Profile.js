@@ -1,6 +1,8 @@
 
 import React from "react"
 import {Container, Row, Col, Image, Jumbotron, ListGroup,ButtonToolbar, Button} from 'react-bootstrap'
+import { Route, Redirect } from 'react-router'
+import { conditionalExpression } from "babel-types";
 import "./Profile.css"
 
 
@@ -12,17 +14,24 @@ class Profile extends React.Component {
 			userInfo: {
 				interests: []
 			},
-			claimed: false
+			claimed: localStorage.getItem("ISCLAIMED") == "true",
+			editPrivilege: false,
+			redirect: false
 		}
 
 		this.handleClick = this.handleClick.bind(this)
 		this.callApi = this.callApi.bind(this)
+		this.redirect = this.redirect.bind(this)
 	}
 
 	handleClick(event) { 
 
 		this.callApi()
-		this.setState({"claimed": true});
+		
+	}
+
+	redirect(event){
+		this.setState({redirect: true})
 	}
 
 	callApi(){
@@ -32,7 +41,7 @@ class Profile extends React.Component {
 		// var str = 'https://ushare.idre.ucla.edu/ushare/api'; 
 		var opts = {
 			"userID": self.state.userInfo.userID, 
-			"claimedBy": "juna"
+			"claimedBy": localStorage.getItem("SHIBEDUPERSONTARGETEDID")
 		}
 	
 	
@@ -46,6 +55,8 @@ class Profile extends React.Component {
 		  }).then(function(response) {
 			return response.json();
 		  }).then(function(data) {
+			localStorage.setItem("ISCLAIMED", true)
+			self.setState({"claimed": true});
 			alert("Succesfully Claimed")
 		  });
 	
@@ -56,9 +67,24 @@ class Profile extends React.Component {
 		window.scrollTo(0, 0)
 		let userInfo = this.props.location.state;
 		this.setState({"userInfo": userInfo})
+		// console.log(userInfo)
+		this.setState({"claimed": this.state.claimed || userInfo.claimed})
+
+		// console.log(`${userInfo.claimedBy}, ${localStorage.getItem("SHIBEDUPERSONTARGETEDID")}`)
+		if (userInfo.claimedBy == localStorage.getItem("SHIBEDUPERSONTARGETEDID")){
+			this.setState({editPrivilege: true})
+		}
 	}
 
 	render(){
+
+		if (this.state.redirect){
+			return (
+				<Redirect to={{
+					pathname: '/create'
+				}}/>
+			)
+		}
 
 		return (
 
@@ -67,15 +93,21 @@ class Profile extends React.Component {
 			<Container id={"bg-1"} fluid="true">
 			<Row>
 			<Col>
-				<Image src={this.state.userInfo.img} id="imgContainer" thumbnail="true"  />
+				<Image src={this.state.userInfo.profilePicture} id="imgContainer" thumbnail="true"  />
 
-					<h1> {this.state.userInfo.name} </h1> 
+					<h1> {this.state.userInfo.fullname} </h1> 
 					<h5> {this.state.userInfo.email} </h5>
 			</Col> 
 
 			<Col>
 				<div> 
 				<ButtonToolbar>
+					{ this.state.editPrivilege ? 
+							<Button variant="primary" size="lg" onClick={this.redirect}>
+							Edit
+							</Button> : null
+					}
+
 					{ !this.state.claimed ? 
 						<Button variant="primary" size="lg" onClick={this.handleClick}>
 						Claim
