@@ -13,7 +13,7 @@ var research_interest = require('./routes/research_interest');
 var login = require('./routes/login')
 
 
-var app = express();
+var app = express().use("*",cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

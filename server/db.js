@@ -1,12 +1,11 @@
-
 var mysql = require('mysql');
 
 //local mysql db connection
 var pool = mysql.createPool({
-    host     : 'localhost',
-    user     : 'root',
-    password : 'password',
-    database : 'rawdata'
+  host: 'localhost',
+  user: 'root',
+  password: 'password',
+  database: 'rawdata'
 });
 
 // var connection = mysql.createConnection({
