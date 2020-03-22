@@ -2,10 +2,10 @@
 var mysql = require('mysql');
 
 //local mysql db connection
-var connection = mysql.createConnection({
+var pool = mysql.createPool({
     host     : 'localhost',
     user     : 'root',
-    password : '',
+    password : 'password',
     database : 'rawdata'
 });
 
@@ -16,8 +16,19 @@ var connection = mysql.createConnection({
 //     database : 'rawdata'
 // });
 
-connection.connect(function(err) {
-    if (err) throw err;
-});
+const db = {
 
-module.exports = connection;
+  query(sql, args = []) {
+    // console.log("Executing Query : " + mysql.format(sql, args));
+    return new Promise((resolve, reject) => {
+      pool.query(sql, args, (err, result) => {
+        if (err)
+          return reject(err);
+        resolve(result);
+      });
+    });
+  }
+
+};
+
+module.exports = db;
