@@ -8,7 +8,8 @@ router.get('/', function(req, res, next) {
 
 
 	let first_query = async() => {
-		let query_string = `SELECT * FROM user
+		let query_string = `SELECT user.userID, user.email, user.firstName, user.lastName, user.researchInterests, user.profilePicture, user.ShibbolethLogin, affiliation.departmentID
+							FROM user
 							INNER JOIN affiliation ON
 							user.userID=affiliation.userID`;
 		let args = [];
