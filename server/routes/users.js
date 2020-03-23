@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 	let first_query = async() => {
 		let query_string = `SELECT * FROM user
 							INNER JOIN affiliation ON
-							user.userID=affiliation.affiliationID`;
+							user.userID=affiliation.userID`;
 		let args = [];
 
 		return await sql.query(query_string, args);
