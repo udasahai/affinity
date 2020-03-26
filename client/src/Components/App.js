@@ -11,13 +11,17 @@ class App extends React.Component {
         super(props);
         this.state = {
             value: '',
+            select_department_options: [],
             selections_department: 0,
             selections_research: "",
             research_interest: null,
             department: null,
-            response: null,
+            users: null,
+            selectedOption: null,
             isLoaded: false
         };
+
+        this.onSelect = this.onSelect.bind(this);
 
         this.handleChange = this.handleChange.bind(this);
         this.callApi = this.callApi.bind(this);
@@ -26,12 +30,20 @@ class App extends React.Component {
     }
 
 
+    onSelect = selectedOption => {
+        console.log(`Option selected:`, selectedOption);
+    };
 
     handleChange(event) {
         this.setState({ value: event.target.value });
     }
 
     department_selection(event) {
+        const selected_index = event.target.options.selectedIndex;
+        // console.log(event.target.options[selected_index].getAttribute('data-value'));
+
+        console.log(event.target.value);
+
         this.setState({
             selections_department: event.target.value
         })
@@ -71,75 +83,78 @@ class App extends React.Component {
 
         var that = this;
 
-        this.getInfo().then(function(data) {
-                // data["SHIBEDUPERSONTARGETEDID"] = "wilcox"
-                localStorage.setItem("SHIBEDUPERSONAFFILIATION", data["SHIBEDUPERSONAFFILIATION"])
-                localStorage.setItem("SHIBEDUPERSONPRINCIPALNAME", data["SHIBEDUPERSONPRINCIPALNAME"])
-                localStorage.setItem("SHIBEDUPERSONTARGETEDID", data["SHIBEDUPERSONTARGETEDID"])
-                localStorage.setItem("SHIBMAIL", data["SHIBMAIL"])
-                localStorage.setItem("SHIBGIVENNAME", data["SHIBGIVENNAME"])
-                return that.getTargetId(data["SHIBEDUPERSONTARGETEDID"])
-            }).then(function(data) {
-                // localStorage.setItem
-                data.body.length > 0 ? localStorage.setItem("ISCLAIMED", "true") : localStorage.setItem("ISCLAIMED", "false")
-                // return that.callApi()
-                // localStorage.setItem("ISCLAIMED", "false")
-                return that.callApi()
-            })
-            .then(res => this.setState({ isLoaded: true }))
-            .catch(err => console.log(err));
+        let start = async() => {
+            await that.callApi();
+            // that.setState({ isLoaded: true });
+            // console.log("Loaded")
+
+        }
+
+        start().catch(e => console.error(e));
+
+        // this.getInfo().then(function(data) {
+        //         // data["SHIBEDUPERSONTARGETEDID"] = "wilcox"
+        //         localStorage.setItem("SHIBEDUPERSONAFFILIATION", data["SHIBEDUPERSONAFFILIATION"])
+        //         localStorage.setItem("SHIBEDUPERSONPRINCIPALNAME", data["SHIBEDUPERSONPRINCIPALNAME"])
+        //         localStorage.setItem("SHIBEDUPERSONTARGETEDID", data["SHIBEDUPERSONTARGETEDID"])
+        //         localStorage.setItem("SHIBMAIL", data["SHIBMAIL"])
+        //         localStorage.setItem("SHIBGIVENNAME", data["SHIBGIVENNAME"])
+        //         return that.getTargetId(data["SHIBEDUPERSONTARGETEDID"])
+        //     }).then(function(data) {
+        //         // localStorage.setItem
+        //         data.body.length > 0 ? localStorage.setItem("ISCLAIMED", "true") : localStorage.setItem("ISCLAIMED", "false")
+        //         // return that.callApi()
+        //         // localStorage.setItem("ISCLAIMED", "false")
+        //         return that.callApi()
+        //     })
+        //     .then(res => this.setState({ isLoaded: true }))
+        //     .catch(err => console.log(err));
     }
+
 
 
     callApi() {
 
         var self = this;
-        var str = "";
-        // var str = 'https://ushare.idre.ucla.edu/ushare/api'; 
+        var str = '';
+
+        let getInfo = async(param) => {
+            let response = await fetch(str + param);
+            let data = response.json()
+
+            return data;
+        }
+
+        // Implement throw err if status code is not "ok" or change it to 200 in the backend too. 
+
+        let load1 = getInfo('/user').then(data => {
+            console.log(data.rows);
+            self.setState({ users: data.rows })
+            return true;
+        }).catch(e => console.error(e));
+
+        let load2 = getInfo('/department').then(data => {
+            console.log(data.rows);
+            self.setState({ department: data.rows })
+            return true;
+        }).catch(e => console.error(e));
+
+        let load3 = getInfo('/research_interest').then(data => {
+            console.log(data.rows);
+            self.setState({ research_interest: data.rows })
+            return true;
+        }).catch(e => console.error(e));
 
 
-        return fetch(str + '/users')
-            .then(function(response) {
-                return response.json();
-            })
-            .then(function(data) {
-                if (data.status !== 200) throw Error();
-                self.setState({ response: (data.body) })
-                return fetch(str + '/department')
-            })
-            .then(function(response) {
-                return response.json();
-            })
-            .then(function(data) {
-                if (data.status !== 200) throw Error();
-                self.setState({ department: data.body })
-                return fetch(str + '/research_interest')
-            }).then(function(response) {
-                return response.json()
-            }).then(function(data) {
-                if (data.status !== 200) throw Error();
-                self.setState({ research_interest: data.body })
-                return true;
-            })
+        Promise.all([load1, load2, load3]).then(() => {
+            self.setState({ isLoaded: true })
+            console.log("Loaded")
+        })
+        console.log("meow")
 
     }
 
 
-    // callApi(){
-
-    // 	return fetch('/users').then(function(response){
-    // 		let res = response.clone().json()
-    // 		console.log(res);
-    // 		return res;
-    // 	})
-    // };
-
-    // callApi = async () => {
-    //    const response = await fetch('/users');
-    //    const body = await response.json();
-    //    if (response.status !== 200) throw Error(body.message);
-    //    return body;
-    //  };
 
 
     tileComponents() {
@@ -147,11 +162,14 @@ class App extends React.Component {
         var value = this.state.value;
         var selection = this.state.selections_department;
         var selections_research = this.state.selections_research;
+        var data = this.state.users;
 
-        var data = this.state.response;
+
+        value = value.toLowerCase();
+
+        console.log("dept : " + selection);
 
         if (selections_research.length > 0) {
-            value = value.toLowerCase();
             data = data.filter(function(tile) {
                 return tile.researchInterests.toLowerCase().includes(selections_research.toLowerCase())
             })
@@ -166,6 +184,7 @@ class App extends React.Component {
 
         if (selection > 0) {
             data = data.filter(function(tile) {
+                console.log(tile)
                 return tile.departmentID == selection
             })
         }
@@ -187,7 +206,7 @@ class App extends React.Component {
         // console.log(data)
 
         return data.map(tile => (
-            <Tile key={tile.userID}
+            <Tile key={tile.userID*100 + tile.departmentID}
 			// contact={{name: tile.firstName + " " + tile.lastName , imgUrl: tile.profilePicture, 
 			// email: tile.email, interests: tile.researchInterests, userID: tile.userID, claimed: tile.claimed, data: tile}}
 			contact={tile}
@@ -197,43 +216,50 @@ class App extends React.Component {
 
     render() {
 
+        const { selectedOption } = this.state;
+
         return (
+            // <div> 
+            //     <h1> Hello World </h1>
+            // </div>
+
+            !this.state.isLoaded ? <h1> Loading </h1> :
             <div>
-		<div id="search"> 
-		<Form id = "form">
-		  <Form.Group controlId="formBasicEmail">
-		    <Form.Control type="text" onKeyUp={this.handleChange} placeholder="Enter Name" />
-		  </Form.Group>
-		</Form>
-		<div id="drop"> 
-			<select value={this.state.selections_department} onChange={this.department_selection}> 
-				<option value={0}> All </option>
-			  {
-			  !this.state.isLoaded ? <option value={0}>Loading</option> :
-			  this.state.department.map(dep => <option key={dep.name} value={dep.DepartmentID}>{dep.name}</option>)
-			  }
-			</select> 
+            		<div id="search"> 
+            		<Form id = "form">
+            		  <Form.Group controlId="formBasicEmail">
+            		    <Form.Control type="text" onKeyUp={this.handleChange} placeholder="Enter Name" />
+            		  </Form.Group>
+            		</Form>
+            		<div id="drop"> 
+            			<select value={this.state.selections_department} onChange={this.department_selection}> 
+            				<option key={0} value={0}> All </option>
 
-			<input list="interests" onKeyPress={this.change_research}/>
-			<datalist id="interests"> 
+            			  {
+            			  this.state.department.map(dep => <option key={dep.departmentID} value={dep.departmentID}>{dep.name}</option>
+            			  )}
+            			
+            			</select> 
 
-			    {
-			    	!this.state.isLoaded ? <option value={0}/> :
-			    	this.state.research_interest.map((item) =>
-			      <option key={item.research_interestID} value={item.keyword} />
-			    )
+            			<input list="interests" onKeyPress={this.change_research}/>
+            			<datalist id="interests"> 
 
-			    }
-			</datalist>
+            			    {
+            			    	this.state.research_interest.map((item) =>
+            			      <option key={item.research_interestID} value={item.keyword} />
+            			    )}
+            			    
+            			</datalist>
 
-		</div> 
-		</div> 
-		<div id="deck">
-			<CardColumns>
-				{!this.state.isLoaded ? "...Loading" : this.tileComponents()}
-			</CardColumns>
-		</div> 
-		</div>
+            		</div> 
+            		</div> 
+            		<div id="deck">
+            			<CardColumns>
+            				{!this.state.isLoaded ? "...Loading" : this.tileComponents()}
+            			</CardColumns>
+            		</div> 
+            		</div>
+
         )
 
     }

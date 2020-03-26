@@ -1,17 +1,17 @@
-import React, { Component } from 'react'; 
-import { Navbar, Nav, NavItem, NavDropdown, Form, Button, FormControl} from 'react-bootstrap';
+import React, { Component } from 'react';
+import { Navbar, Nav, NavItem, NavDropdown, Form, Button, FormControl } from 'react-bootstrap';
 import { LinkContainer } from "react-router-bootstrap";
 import { Route, Redirect } from 'react-router'
 import { conditionalExpression } from "babel-types";
 import * as api from '../api.js';
 
- class Header extends React.Component {
+class Header extends React.Component {
 
-	constructor(props){
+	constructor(props) {
 		super(props);
 
 		this.state = {
-			userInfo : {}, 
+			userInfo: {},
 			isClaimed: false,
 			profileClicked: false
 		}
@@ -19,14 +19,14 @@ import * as api from '../api.js';
 		this.handleProfileClick = this.handleProfileClick.bind(this)
 	}
 
-	handleProfileClick(event){
+	handleProfileClick(event) {
 		// console.log("clicked")
-		this.setState({profileClicked: true})
+		this.setState({ profileClicked: true })
 	}
 
-	componentDidMount(){
+	componentDidMount() {
 
-		this.setState({isClaimed: localStorage.getItem("ISCLAIMED")})
+		// this.setState({isClaimed: localStorage.getItem("ISCLAIMED")})
 		api.getTargetId(localStorage.getItem("SHIBEDUPERSONTARGETEDID")).then((data) => {
 
 			if (data.body.length > 0) {
@@ -34,25 +34,27 @@ import * as api from '../api.js';
 				var user = data.body[0]
 				user["fullname"] = user.firstName + " " + user.lastName
 				user["interests"] = user.researchInterests.split(",")
-				this.setState({userInfo: data.body[0]})
+				this.setState({ userInfo: data.body[0] })
 
 			}
 		})
 	}
 
 
-    render() {
-		if(!this.state.isClaimed && this.state.profileClicked) 
+	render() {
+		// if(!this.state.isClaimed && this.state.profileClicked) 
+		// {
+		// 	this.setState({profileClicked: false})
+		// 	return ( 
+		// 		<Redirect to={{
+		// 				pathname: '/create'
+		// 			}}/>
+		// 		) 
+		// } else
+
 		{
-			this.setState({profileClicked: false})
-			return ( 
-				<Redirect to={{
-						pathname: '/create'
-					}}/>
-	  		) 
-		} else {
-        return (
-        	<div>
+			return (
+				<div>
 				<Navbar bg="light" expand="lg" fixed="top" >
 				  <LinkContainer to="/app">
 				  <Navbar.Brand>Affinity@UCLA</Navbar.Brand>
@@ -89,8 +91,9 @@ import * as api from '../api.js';
 				  </Navbar.Collapse>
 				</Navbar>
             </div>
-        ) }
-    }
+			)
+		}
+	}
 }
 
 export default Header

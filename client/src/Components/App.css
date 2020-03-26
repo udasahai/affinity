@@ -1,28 +1,27 @@
-#search
-{
-/*position: fixed; */
-top: 55px;
-position: fixed;
-overflow: hidden;
-width: 100%;
-z-index: 5;
-clear: both;
+#search {
+    /*position: fixed; */
+    top: 55px;
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+    z-index: 5;
+    clear: both;
 }
 
 
-#deck { 
+#deck {
 
-margin-top: 20px;
+    margin-top: 20px;
 
- }
+}
 
- #drop{
- 	float: right;
- 	width: 50%;
- }
+#drop {
+    float: right;
+    width: 50%;
+}
 
 
-#form{
-	float: left;
-	width: 50%;
+#form {
+    float: left;
+    width: 50%;
 }
