@@ -5,27 +5,35 @@ import './index.css'
 import { Route, Link, BrowserRouter as Router } from 'react-router-dom'
 import App from "./Components/App"
 import Profile from "./Components/Profile"
-import Header from "./Components/Nav"
+import Header from "./Components/Header"
 import Footer from './Components/Footer'
 import Create from './Components/Create';
+import { store } from './Store'
 
 
-const routing = (
-    <Router id="router">
-    <div>
+const Routing = (props) => {
+ return (
+  <Router id="router">
+        <div>
+    
+         <Header/> 
+    
+         <div id="top">
+          <Route exact path="/" component={App}/>
+          <Route path="/app" component={App}/>
+          <Route path="/profile" component={Profile}/>
+          <Route path="/create" component={Create}/>
+    
+         </div>
+    
+        </div>
+      </Router>
+ )
 
-     <Header/> 
+}
 
-     <div id="top">
-      <Route exact path="/" component={App}/>
-      <Route path="/app" component={App}/>
-      <Route path="/profile" component={Profile}/>
-      <Route path="/create" component={Create}/>
 
-     </div>
+const render = () => ReactDOM.render(<Routing />, document.getElementById('root'))
 
-    </div>
-  </Router>
-)
-
-ReactDOM.render(routing, document.getElementById('root'))
+render();
+store.subscribe(render);

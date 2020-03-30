@@ -3,6 +3,8 @@ import { CardColumns, Form, Dropdown, ModalTitle } from 'react-bootstrap'
 import Tile from "./Tile"
 import { tileData } from "../data"
 import "./App.css"
+import { SET_DETAILS, setUserDetails } from '../Actions'
+import { store } from '../Store'
 
 
 class App extends React.Component {
@@ -39,6 +41,14 @@ class App extends React.Component {
     }
 
     department_selection(event) {
+
+        store.dispatch(setUserDetails({
+            username: "udasahai",
+            firstName: "Udayan",
+            lastName: "Sahai",
+            email: "udasahai@gmail.com"
+        }))
+
         const selected_index = event.target.options.selectedIndex;
         // console.log(event.target.options[selected_index].getAttribute('data-value'));
 
@@ -91,6 +101,12 @@ class App extends React.Component {
         }
 
         start().catch(e => console.error(e));
+        store.dispatch(setUserDetails({
+            username: "udasahai",
+            firstName: "pUdayan",
+            lastName: "Sahai",
+            email: "udasahai@gmail.com"
+        }))
 
         // this.getInfo().then(function(data) {
         //         // data["SHIBEDUPERSONTARGETEDID"] = "wilcox"
@@ -184,7 +200,7 @@ class App extends React.Component {
 
         if (selection > 0) {
             data = data.filter(function(tile) {
-                console.log(tile)
+                // console.log(tile)
                 return tile.departmentID == selection
             })
         }

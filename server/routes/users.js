@@ -32,12 +32,17 @@ router.get('/', function(req, res, next) {
 
 });
 
-//Get specific user by thier user_id
-router.get('/id/:target', function(req, res, next) {
-	var claimedBy = req.params.target;
+//Get specific user by thier targetID
+router.get('/id/:targetID', function(req, res, next) {
+	var claimedBy = req.params.targetID;
 
 	let query = async() => {
-		let query_string = 'SELECT * FROM user where user.userID = ?';
+		let query_string = `SELECT * FROM user 
+		WHERE user.userID = (
+			SELECT targetID_to_userID.userID
+			FROM targetID_to_userID
+			WHERE targetID_to_userID.targetID=?
+		)`;
 		let args = [claimedBy];
 
 		return await sql.query(query_string, args);
