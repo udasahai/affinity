@@ -11,9 +11,10 @@ var users = require('./routes/users');
 var department = require('./routes/department');
 var research_interest = require('./routes/research_interest');
 var login = require('./routes/login')
+var publications = require('./routes/publications')
 
 
-var app = express().use("*",cors());
+var app = express().use("*", cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,6 +37,7 @@ app.use('/user', users);
 app.use('/department', department)
 app.use('/research_interest', research_interest)
 app.use('/login', login)
+app.use('/publications', publications)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

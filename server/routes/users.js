@@ -33,8 +33,8 @@ router.get('/', function(req, res, next) {
 });
 
 //Get specific user by thier targetID
-router.get('/id/:targetID', function(req, res, next) {
-	var claimedBy = req.params.targetID;
+router.get('/id', function(req, res, next) {
+	var claimedBy = req.query.id;
 
 	let query = async() => {
 		let query_string = `SELECT * FROM user 
@@ -66,27 +66,36 @@ router.get('/id/:targetID', function(req, res, next) {
 
 
 
+
+
 // 	//Claim the user 
-// router.post('/', function(req, res, next) {
-// 		let userID = req.body.userID
-// 		let claimedBy = req.body.claimedBy
+router.post('/update', function(req, res, next) {
+	let userID = req.body.userID
 
-// 		// console.log(req.body)
+	var sets = {
+		firstName: req.body.firstName,
+		lastName: req.body.lastName,
+		email: req.body.email,
+		researchInterests: req.body.researchInterests
+	}
+	// console.log(req.body)
+	let query = async() => {
+		let query_string = `UPDATE user SET ? WHERE userID=?`;
+		let args = [sets, userID];
+		return await sql.query(query_string, args);
+	}
 
-// 		let query = 
-// 		`UPDATE user
-// 		SET claimedBy="${claimedBy}", claimed=1
-// 		WHERE userID=${userID}
-// 		`
-// 		console.log(query)
-// 		sql.query(query, function (err, rows, fields) {
-// 			  if (err) throw err
-// 			  res.send({
-// 					  status: 200,
-// 					  body: rows
-// 			  });
-// 			})
+	query().then(data => {
+		res.send({
+			status: "ok",
+			rows: data
+		})
+	}).catch(e => {
+		console.error(e);
+		res.status(400);
+		res.send({ status: "fail" });
+	});
 
-// 		});
+});
 
 module.exports = router;
